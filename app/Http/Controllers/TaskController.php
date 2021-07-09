@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
@@ -40,6 +42,7 @@ class TaskController extends Controller
             'name' => $request->name,
         ]);
         session()->flash('success', trans('message.success'));
+
         return redirect()->back();
     }
 
@@ -85,6 +88,17 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $tasks = Task::find($id);
+        DB::beginTransaction();
+        try {
+            $tasks->delete();
+            DB::commit();
+            session()->flash('success', trans('message.delete1'));
+            return redirect()->route('Task.index');
+        } catch (Exception $ex) {
+            DB::rollback();
+            
+            return redirect()->back()->with('error', $ex->getMessage());
+        }
     }
 }

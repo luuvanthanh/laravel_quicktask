@@ -8,5 +8,7 @@ return [
     'currenttask' => 'Current Tasks',
     'delete' => 'DELETE',
     'success' => 'Added success',
-    
+    'delete1' => 'Deleted success',
+
 ];
+
